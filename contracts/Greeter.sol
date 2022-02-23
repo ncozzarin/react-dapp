@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "hardhat/console.sol";
 
@@ -11,6 +11,9 @@ contract Greeter {
         greeting = _greeting;
     }
 
+
+// public means that can read from outside
+// view means we are not changing only reading, if we were not reading
     function greet() public view returns (string memory) {
         return greeting;
     }
