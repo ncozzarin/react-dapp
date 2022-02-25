@@ -2,22 +2,48 @@ import logo from './logo.svg';
 import { useState } from 'react';
 import { ethers } from 'ethers';
 import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json';
+import Token from './artifacts/contracts/Token.sol/Token.json';
 import './App.css';
 
 const greeterAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+const tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+
 
 function App() {
 
   const [greeting, setGreetingValue] = useState('');
-  const [blockResponse, setBlockResponse] = useState();
+  const [userAccount, setUserAccount] = useState('');
+  const [amount, setAmmount] = useState(0);
 
   // request access to the user's MetaMask account
   async function requestAccount() {
     // pide al usuario que se connecte a metamask
     await window.ethereum.request({ method: 'eth_requestAccounts' });
-
   }
 
+  async function getBalance() {
+        // comprobar si estan usando metamask en el browser o si tienen una wallet conectada
+        if (typeof window.ethereum !== 'undefined') {
+          const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const contract = new ethers.Contract(tokenAddress, Token.abi, provider)
+          const balance = await contract.balanceOf(account);
+          console.log("Balance: ", balance.toString());
+        }
+  }
+
+  async function sendCoins() {
+    if (typeof window.ethereum !== 'undefined') {
+      await requestAccount()
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(tokenAddress, Token.abi, signer);
+      const transation = await contract.transfer(userAccount, amount);
+      await transation.wait();
+      console.log(`${amount} Coins successfully sent to ${userAccount}`);
+    }
+  }
+  
   // call the smart contract, read the current greeting value
   async function fetchGreeting() {
     // comprobar si estan usando metamask en el browser
