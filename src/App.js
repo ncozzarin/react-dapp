@@ -13,7 +13,7 @@ function App() {
 
   const [greeting, setGreetingValue] = useState('');
   const [userAccount, setUserAccount] = useState('');
-  const [amount, setAmmount] = useState(0);
+  const [amount, setAmount] = useState(0);
 
   // request access to the user's MetaMask account
   async function requestAccount() {
@@ -43,7 +43,7 @@ function App() {
       console.log(`${amount} Coins successfully sent to ${userAccount}`);
     }
   }
-  
+
   // call the smart contract, read the current greeting value
   async function fetchGreeting() {
     // comprobar si estan usando metamask en el browser
@@ -92,8 +92,13 @@ function App() {
       <button onClick={fetchGreeting}>Fetch Greeting</button>
       <button onClick={setGreeting}>Set greeting</button>
       <input
-      onChange={e => setGreetingValue(e.target.value)} placeholder="Set greeting" value={greeting}
-      />
+      onChange={e => setGreetingValue(e.target.value)} placeholder="Set greeting" value={greeting}/>
+
+      <br/>
+        <button onClick={getBalance}>Get Balance</button>
+        <button onClick={sendCoins}>Send Coins</button>
+        <input onChange={e => setUserAccount(e.target.value)} placeholder="Account ID" />
+        <input onChange={e => setAmount(e.target.value)} placeholder="Amount" />
 
      </header>
     </div>
